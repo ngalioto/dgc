@@ -1,23 +1,21 @@
 import numpy as np
 import scanpy as sc
 import itertools
+from typing import Tuple
 
 def filter_tfs(
     initial : sc.AnnData,
     target : sc.AnnData,
     target_expression : float,
     fold_change : float,
-    tf_list : list
-):
+    tf_list : np.ndarray
+) -> np.ndarray:
 
     """
     Filters the transcription factors based on the target expression and fold change
 
     TODO: handle zeros in initial and target
     """
-
-    # if target.ndim > 1 or initial.ndim > 1:
-    #     raise ValueError(f'The arrays `initial` and `target` must be 1D, but have shapes {initial.shape=} and {target.shape=}, respectively')
     
     initial = initial[:, np.isin(initial.var_names, tf_list)]
     target = target[:, np.isin(target.var_names, tf_list)]
@@ -30,9 +28,9 @@ def filter_tfs(
     return tf_list[mask][np.logical_and(expression_condition, fold_change_condition).squeeze()]
 
 def generate_recipes(
-    tf_list : list,
+    tf_list : np.ndarray,
     n : int
-):
+) -> list[str]:
 
     """
     Generates all possible combinations of transcription factors
@@ -49,7 +47,7 @@ def generate_recipes(
 def preprocess_data(
     adata : sc.AnnData,
     target : sc.AnnData
-):
+) -> Tuple[sc.AnnData, sc.AnnData]:
 
     """
     Preprocesses the data for the DGC model
@@ -87,7 +85,7 @@ def map_genes_to_TADs(
     adata : sc.AnnData,
     axis : str = 'var',
     func : str = 'sum'
-):
+) -> sc.AnnData:
     
     # Map the vectors to TAD space
     adata = sc.get.aggregate(adata, by='TAD', func=func, axis=axis)
@@ -96,8 +94,8 @@ def map_genes_to_TADs(
     return adata
 
 def print_scores(
-    sorted_scores : dict
-):
+    sorted_scores : dict[str, float]
+) -> None:
 
     """
     Prints the scores from the optimization

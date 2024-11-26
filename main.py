@@ -9,8 +9,8 @@ class DGC:
 
     def __init__(
         self,
-        gene_list : list = None
-    ):
+        gene_list : list[str] | None = None
+    ) -> None:
         
         self.A = None
         self.xdim = None
@@ -18,8 +18,8 @@ class DGC:
 
     def get_B_matrix(
         self, 
-        gene_list=None
-    ):
+        gene_list : list[str] | None = None
+    ) -> None:
         """
         Instantiates the B matrix for DGC as an AnnData object.
         Rows are genes and columns are transcription factors.
@@ -41,7 +41,7 @@ class DGC:
     def build_A_matrices(
         self,
         adata : sc.AnnData
-    ):
+    ) -> None:
         
         """
         Computes array of the time-varying A matrices for the DGC model and assigns it to self.A
@@ -72,8 +72,8 @@ class DGC:
         self,
         initial : np.ndarray,
         target : np.ndarray,
-        recipe_list : list
-    ):
+        recipe_list : list[str]
+    ) -> dict[str, dict[str, np.ndarray]]:
 
         """
         Estimates the transcription factors according to DGC
